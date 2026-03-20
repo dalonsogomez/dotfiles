@@ -15,8 +15,15 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 # ─── oh-my-zsh ───────────────────────────────────────────────────────────────
-echo "Installing oh-my-zsh..."
-RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    echo "oh-my-zsh already installed — skipping."
+else
+    echo "Installing oh-my-zsh..."
+    # KEEP_ZSHRC=yes → never overwrite existing .zshrc (stow will symlink ours)
+    # RUNZSH=no      → don't launch zsh at the end of the installer
+    KEEP_ZSHRC=yes RUNZSH=no sh -c \
+        "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
 # ─── Homebrew ────────────────────────────────────────────────────────────────
 echo "Installing Homebrew..."
