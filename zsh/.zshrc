@@ -116,7 +116,6 @@ alias gh-create='gh repo create --private --source=. --remote=origin && git push
 
 alias nvim-scratch="NVIM_APPNAME=nvim-scratch nvim"
 alias lg="lazygit"
-alias mpds="mpd ~/.config/mpd/mpd.conf"
 alias myvault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/"
 
 # brew path

@@ -27,8 +27,8 @@ brew analytics off
 # ─── Taps ────────────────────────────────────────────────────────────────────
 echo "Tapping Brew..."
 # NOTE: homebrew/cask-fonts was deprecated — do NOT tap it, fonts install directly.
-brew tap FelixKratz/formulae       # sketchybar, borders
-brew tap nikitabobko/tap           # aerospace
+brew tap FelixKratz/formulae   # sketchybar, borders
+brew tap nikitabobko/tap       # aerospace
 
 # ─── Core utils ──────────────────────────────────────────────────────────────
 echo "Installing core utilities..."
@@ -65,9 +65,6 @@ brew install \
     yazi \
     switchaudio-osx \
     imagemagick \
-    ascii-image-converter \
-    mpd \
-    mpc \
     sqlite \
     node \
     nvm \
@@ -78,7 +75,7 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-system-clipboard" ]]; then
     echo "Cloning zsh-system-clipboard..."
     git clone https://github.com/kutsan/zsh-system-clipboard \
-        "$ZSH_CUSTOM/plugins/zsh-system-clipboard"
+        "$ZSH_CUSTOM/plugins/zsh-system-clipboard" --quiet
 fi
 
 # ─── wtp (git worktree plus) — optional ──────────────────────────────────────
@@ -93,30 +90,20 @@ brew install --cask \
     ghostty \
     raycast \
     karabiner-elements \
-    wezterm \
     nikitabobko/tap/aerospace \
     keycastr \
     betterdisplay \
     linearmouse \
-    font-hack-nerd-font \
-    font-jetbrains-mono-nerd-font \
-    font-sf-pro
-
-# ─── Alacritty themes (required by alacritty.toml) ───────────────────────────
-if [[ ! -d "$HOME/.config/alacritty/repothemes" ]]; then
-    echo "Cloning alacritty themes..."
-    mkdir -p "$HOME/.config/alacritty"
-    git clone https://github.com/alacritty/alacritty-theme \
-        "$HOME/.config/alacritty/repothemes"
-fi
+    font-jetbrains-mono-nerd-font
+# NOTE: font-sf-pro ships with macOS Tahoe — no installation needed.
 
 # ─── TPM — Tmux Plugin Manager ───────────────────────────────────────────────
-# tmux.conf expects TPM at ~/.config/tmux/.tmux/plugins/tpm (not ~/.tmux/plugins/tpm)
+# tmux.conf expects TPM at ~/.config/tmux/.tmux/plugins/tpm
 TPM_PATH="$HOME/.config/tmux/.tmux/plugins/tpm"
 if [[ ! -d "$TPM_PATH" ]]; then
     echo "Installing TPM..."
     mkdir -p "$(dirname "$TPM_PATH")"
-    git clone https://github.com/tmux-plugins/tpm "$TPM_PATH"
+    git clone https://github.com/tmux-plugins/tpm "$TPM_PATH" --quiet
 fi
 
 # ─── Neovim undo directory ───────────────────────────────────────────────────
@@ -149,18 +136,14 @@ mkdir -p "$HOME/.config"
 
 stow -t ~ \
     aerospace \
-    alacritty \
     atuin \
     ghostty \
     karabiner \
-    mpd \
     nvim \
-    rmpc \
     scripts \
     sketchybar \
     starship \
     tmux \
-    wezterm \
     zed \
     zsh
 
