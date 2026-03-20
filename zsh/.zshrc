@@ -1,140 +1,103 @@
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
 
-export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml" # starship
-export TMUX_CONF="$HOME/.config/tmux/tmux.conf" # tmux
-export TEALDEER_CONFIG_DIR="$HOME/.config/tealdeer/" # tldr
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+export TMUX_CONF="$HOME/.config/tmux/tmux.conf"
+export TEALDEER_CONFIG_DIR="$HOME/.config/tealdeer/"
 
 fpath=(~/.zsh/completions $fpath)
 
-# zsh plugins via omz
-# path on mac : ~/.oh-my-zsh/custom/plugins/
-# then run git clone <link in the to plugin repo>
 plugins=(
-    git 
-    ## with oh-my-zsh and not homebrew
-    # zsh-autosuggestions
+    git
     zsh-syntax-highlighting
     zsh-system-clipboard
-    # zsh-vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
-# bindkey -r '^['
-# if using ZVM: some shell keybinds may need to be added to zsh_after_init_commands()
-# source ~/.zsh/zvm-config.zsh 
 
-#----- Vim Editing modes & keymaps ------ 
-set -o vi 
+#----- Vim editing mode & keymaps ------
+set -o vi
 
 export EDITOR=nvim
 export VISUAL=nvim
 
-# ctrl y accept requires zsh-autosuggestions to be active
-# bindkey -M viins '^Y' autosuggest-accept 
-
 bindkey -M viins '^P' up-line-or-beginning-search
 bindkey -M viins '^N' down-line-or-beginning-search
-#----------------------------------------
+#---------------------------------------
 
-# Set up FZF key bindings and fuzzy completion
-# Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
+# FZF
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git "
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-
 export FZF_DEFAULT_OPTS="--height 50% --layout=default --border --color=hl:#2dd4bf"
-
-# Setup fzf previews
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
+export FZF_TMUX_OPTS=" -p90%,70% "
 
-# fzf preview for tmux
-export FZF_TMUX_OPTS=" -p90%,70% "  
-
-
-# unbind ctrl g in terminal
 bindkey -r "^G"
 
-# -------------------------------
 # Initializers and sources
 eval "$(gdircolors)"
 
-# wtp (gitworktree plus)
-eval "$(wtp shell-init zsh)"
+# wtp — guarded: only init if installed
+command -v wtp &>/dev/null && eval "$(wtp shell-init zsh)"
 
-# gitbutler
-eval "$(but completions zsh)"
+# gitbutler CLI — guarded: only init if installed
+command -v but &>/dev/null && eval "$(but completions zsh)"
 
-# starship 
+# starship
 if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
       "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
     zle -N zle-keymap-select "";
 fi
 eval "$(starship init zsh)"
 
-eval "$(zoxide init zsh)" # zoxide
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+source ~/scripts/fzf-git.sh
 
-eval "$(fzf --zsh)" # fzf
-source ~/scripts/fzf-git.sh # fzf git
-
-# Atuin configs
+# Atuin
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
 bindkey '^r' atuin-search-viins
 
-# Sesh tmux config
-
+# Sesh tmux session picker
 function sesh-sessions() {
     {
         exec </dev/tty
         exec <&1
         local session
-        session=$(
-            sesh list -t -c | fzf --height 50% --border-label ' sesh ' --border --prompt '🛸  '
-        )
+        session=$(sesh list -t -c | fzf --height 50% --border-label ' sesh ' --border --prompt '🛸  ')
         zle reset-prompt > /dev/null 2>&1 || true
         [[ -z "$session" ]] && return
         sesh connect $session
     }
 }
-
 zle     -N             sesh-sessions
 bindkey -M emacs '\es' sesh-sessions
 bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
 
-# User configuration
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# -------------------------------
-
 # -------------------ALIAS----------------------
-# For Running Go Server using Air
 alias air='$(go env GOPATH)/bin/air'
-
-# other Aliases shortcuts
 alias c="clear"
 alias e="exit"
 alias vim="nvim"
 
-# Tmux 
+# Tmux
 alias tmux="tmux -f $TMUX_CONF"
 alias a="attach"
-# calls the tmux new session script
 alias tns="~/scripts/tmux-sessionizer.sh"
 
-# fzf 
-# called from ~/scripts/
+# fzf helpers
 alias nlof="~/scripts/fzf_listoldfiles.sh"
-# opens documentation through fzf (eg: git,zsh etc.)
 alias fman="compgen -c | fzf | xargs man"
 
-# zoxide (called from ~/scripts/)
+# zoxide
 alias nzo="~/scripts/zoxide_openfiles_nvim.sh"
 
-# Next level ls (options:  --no-filesize --no-time --no-permissions)
-alias ls="eza --no-filesize --long --color=always --icons=always --no-user" 
+# ls
+alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
 
 # tree
 alias tree="tree -L 3 -a -I '.git' --charset X "
@@ -143,7 +106,7 @@ alias dtree="tree -L 3 -a -d -I '.git' --charset X "
 # lstr
 alias lstr="lstr --icons"
 
-# git aliases
+# git
 alias gt="git"
 alias ga="git add ."
 alias gs="git status -s"
@@ -152,24 +115,13 @@ alias glog='git log --oneline --graph --all'
 alias gh-create='gh repo create --private --source=. --remote=origin && git push -u --all && gh browse'
 
 alias nvim-scratch="NVIM_APPNAME=nvim-scratch nvim"
-
-# lazygit
 alias lg="lazygit"
-
-# mpd start alias
 alias mpds="mpd ~/.config/mpd/mpd.conf"
+alias myvault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/"
 
-# obsidian icloud path
-alias sethvault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/sethVault/"
-# ---------------------------------------
-
-# brew installations (new mac systems brew path: opt/homebrew , not usr/local )
-# source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+# brew path
 typeset -U PATH
-
-export PATH="/Users/personal/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # bun completions
-[ -s "/Users/personal/.bun/_bun" ] && source "/Users/personal/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

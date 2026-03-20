@@ -1,110 +1,177 @@
 #!/bin/bash
 
-# Install xCode cli tools
-if [[ "$(uname)" == "Darwin" ]]; then
-    echo "macOS deteted..."
+set -e
 
+# ─── Xcode CLI Tools ─────────────────────────────────────────────────────────
+if [[ "$(uname)" == "Darwin" ]]; then
+    echo "macOS detected..."
     if xcode-select -p &>/dev/null; then
-        echo "Xcode already installed"
+        echo "Xcode CLI tools already installed."
     else
-        echo "Installing commandline tools..."
+        echo "Installing Xcode CLI tools..."
         xcode-select --install
+        until xcode-select -p &>/dev/null; do sleep 5; done
     fi
 fi
 
-# Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-## install zsh-autosuggestions
-# git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-## install zsh-syntax-highlighting
-# git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+# ─── oh-my-zsh ───────────────────────────────────────────────────────────────
+echo "Installing oh-my-zsh..."
+RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Homebrew
-## Install
-echo "Installing Brew..."
+# ─── Homebrew ────────────────────────────────────────────────────────────────
+echo "Installing Homebrew..."
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 brew analytics off
 
-## Taps
+# ─── Taps ────────────────────────────────────────────────────────────────────
 echo "Tapping Brew..."
-brew tap homebrew/cask-fonts
-brew tap FelixKratz/formulae
-brew install satococoa/tap/wtp
+# NOTE: homebrew/cask-fonts was deprecated — do NOT tap it, fonts install directly.
+brew tap FelixKratz/formulae       # sketchybar, borders
+brew tap nikitabobko/tap           # aerospace
 
-## Formulae
-echo "Installing Brew Formulae..."
-
-## Core Utils
-echo "Install gnu coreutils"
+# ─── Core utils ──────────────────────────────────────────────────────────────
+echo "Installing core utilities..."
 brew install coreutils
 
-### Must Have things
-brew install zsh-autosuggestions
-brew install zsh-syntax-highlighting
-brew install stow
-brew install fzf
-brew install bat
-brew install fd
-brew install zoxide
-brew install lua
-brew install luajit
-brew install luarocks
-brew install prettier
-brew install make
-brew install qmk
-brew install ripgrep
+# ─── CLI formulae ────────────────────────────────────────────────────────────
+echo "Installing CLI formulae..."
+brew install \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting \
+    stow \
+    fzf \
+    bat \
+    fd \
+    zoxide \
+    lua \
+    luajit \
+    luarocks \
+    prettier \
+    make \
+    ripgrep \
+    eza \
+    git \
+    lazygit \
+    tmux \
+    neovim \
+    starship \
+    tree-sitter \
+    tree \
+    borders \
+    atuin \
+    sesh \
+    gum \
+    yazi \
+    switchaudio-osx \
+    imagemagick \
+    ascii-image-converter \
+    mpd \
+    mpc \
+    sqlite \
+    node \
+    nvm \
+    sketchybar
 
-### Terminal
-brew install git
-brew install lazygit
-brew install tmux
-brew install neovim
-brew install starship
-brew install tree-sitter
-brew install tree
-brew install borders
-
-### dev things
-brew install node
-brew install nvm
-brew install sqlite
-
-## Casks
-brew install --cask raycast
-brew install --cask karabiner-elements
-brew install --cask wezterm
-brew install --cask nikitabobko/tap/aerospace
-brew install --cask keycastr
-brew install --cask betterdisplay
-brew install --cask linearmouse
-brew install --cask font-hack-nerd-font
-brew install --cask font-jetbrains-mono-nerd-font
-brew install --cask font-sf-pro
-
-## MacOS settings
-echo "Changing macOS defaults..."
-defaults write com.apple.Dock autohide -bool TRUE
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write InitialKeyRepeat -int 15
-
-csrutil status
-echo "Installation complete..."
-
-# Clone dotfiles repository
-if [ ! -d "$HOME/dotfiles" ]; then
-  echo "Cloning dotfiles repository..."
-  git clone https://github.com/Sin-cy/dotfiles.git $HOME/dotfiles
+# ─── zsh-system-clipboard (not in Homebrew core) ─────────────────────────────
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-system-clipboard" ]]; then
+    echo "Cloning zsh-system-clipboard..."
+    git clone https://github.com/kutsan/zsh-system-clipboard \
+        "$ZSH_CUSTOM/plugins/zsh-system-clipboard"
 fi
 
-# export gnu coreutils to path
-echo 'export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"' >> ~/.zshrc
+# ─── wtp (git worktree plus) — optional ──────────────────────────────────────
+if ! command -v wtp &>/dev/null; then
+    brew install satococoa/tap/wtp 2>/dev/null || \
+        echo "wtp tap unavailable — install manually if needed."
+fi
 
-# Navigate to dotfiles directory
-cd $HOME/dotfiles || exit
+# ─── Casks ───────────────────────────────────────────────────────────────────
+echo "Installing Casks..."
+brew install --cask \
+    ghostty \
+    raycast \
+    karabiner-elements \
+    wezterm \
+    nikitabobko/tap/aerospace \
+    keycastr \
+    betterdisplay \
+    linearmouse \
+    font-hack-nerd-font \
+    font-jetbrains-mono-nerd-font \
+    font-sf-pro
 
-# Stow dotfiles packages
+# ─── Alacritty themes (required by alacritty.toml) ───────────────────────────
+if [[ ! -d "$HOME/.config/alacritty/repothemes" ]]; then
+    echo "Cloning alacritty themes..."
+    mkdir -p "$HOME/.config/alacritty"
+    git clone https://github.com/alacritty/alacritty-theme \
+        "$HOME/.config/alacritty/repothemes"
+fi
+
+# ─── TPM — Tmux Plugin Manager ───────────────────────────────────────────────
+# tmux.conf expects TPM at ~/.config/tmux/.tmux/plugins/tpm (not ~/.tmux/plugins/tpm)
+TPM_PATH="$HOME/.config/tmux/.tmux/plugins/tpm"
+if [[ ! -d "$TPM_PATH" ]]; then
+    echo "Installing TPM..."
+    mkdir -p "$(dirname "$TPM_PATH")"
+    git clone https://github.com/tmux-plugins/tpm "$TPM_PATH"
+fi
+
+# ─── Neovim undo directory ───────────────────────────────────────────────────
+mkdir -p "$HOME/.vim/undodir"
+
+# ─── macOS defaults ──────────────────────────────────────────────────────────
+echo "Applying macOS defaults..."
+defaults write com.apple.Dock autohide -bool TRUE
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+csrutil status
+
+# ─── Clone dotfiles ──────────────────────────────────────────────────────────
+if [[ ! -d "$HOME/dotfiles" ]]; then
+    echo "Cloning dotfiles repository..."
+    git clone https://github.com/dalonsogomez/dotfiles.git "$HOME/dotfiles"
+fi
+
+# ─── Export coreutils to PATH ────────────────────────────────────────────────
+ZPROFILE="$HOME/.zprofile"
+COREUTILS_LINE='export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"'
+grep -qF "$COREUTILS_LINE" "$ZPROFILE" 2>/dev/null || \
+    echo "$COREUTILS_LINE" >> "$ZPROFILE"
+
+# ─── Stow all dotfiles packages ──────────────────────────────────────────────
 echo "Stowing dotfiles..."
-stow -t ~ aerospace karabiner neovim starship wezterm tmux zsh
+cd "$HOME/dotfiles" || exit 1
+mkdir -p "$HOME/.config"
 
-echo "Dotfiles setup complete!"
+stow -t ~ \
+    aerospace \
+    alacritty \
+    atuin \
+    ghostty \
+    karabiner \
+    mpd \
+    nvim \
+    rmpc \
+    scripts \
+    sketchybar \
+    starship \
+    tmux \
+    wezterm \
+    zed \
+    zsh
 
+echo ""
+echo "✓ Installation complete."
+echo ""
+echo "Post-install steps:"
+echo "  1. brew services start sketchybar"
+echo "  2. Open tmux → prefix + I  (install TPM plugins)"
+echo "  3. Open nvim  → lazy.nvim auto-installs plugins"
+echo "  4. Inside nvim: :Mason  (install LSP servers)"
+echo "  5. Install Raycast extensions referenced in karabiner.json"
+echo "  6. Add music to ~/.config/mpd/music/ and: brew services start mpd"
+echo "  7. To enable dashboard image: edit nvim/snacks.lua and set your image path"

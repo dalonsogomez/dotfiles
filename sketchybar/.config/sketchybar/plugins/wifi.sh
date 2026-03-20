@@ -1,11 +1,14 @@
 #!/bin/bash
 
-SSID=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I \
-  | awk -F: '($1 ~ "^ *SSID$"){print $2}' \
-  | cut -c 2-)
+# airport was removed in macOS Sequoia (15+). Using networksetup instead.
+SSID=$(networksetup -getairportnetwork en0 2>/dev/null | awk -F': ' '{print $2}')
+
+if [[ -z "$SSID" || "$SSID" == *"not associated"* ]]; then
+    SSID=""
+fi
 
 sketchybar --set wifi \
-  icon= \
-  icon.color=0xff39FF14 \
-  icon.align=center \
-  label="$SSID"
+    icon= \
+    icon.color=0xff39FF14 \
+    icon.align=center \
+    label="$SSID"

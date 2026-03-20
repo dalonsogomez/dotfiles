@@ -12,13 +12,15 @@ export PATH="$HOME/scripts:$PATH"
 # Mason
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 
-# 010 Hex Editor
-export PATH="$PATH:/Applications/010 Editor.app/Contents/CmdLine" #ADDED BY 010 EDITOR
+# 010 Hex Editor (only if installed)
+[[ -d "/Applications/010 Editor.app/Contents/CmdLine" ]] && \
+    export PATH="$PATH:/Applications/010 Editor.app/Contents/CmdLine"
 
-# Console Ninja
-export PATH=~/.console-ninja/.bin:$PATH
+# Console Ninja (only if installed)
+[[ -d "$HOME/.console-ninja/.bin" ]] && \
+    export PATH="$HOME/.console-ninja/.bin:$PATH"
 
-# NVM
+# NVM — lazy-loaded to keep shell startup fast
 export NVM_DIR="$HOME/.nvm"
 nvm() {
     unset -f nvm node npm npx
@@ -27,35 +29,28 @@ nvm() {
     nvm "$@"
 }
 node() { nvm; node "$@"; }
-npm() { nvm; npm "$@"; }
-npx() { nvm; npx "$@"; }
+npm()  { nvm; npm  "$@"; }
+npx()  { nvm; npx  "$@"; }
 
-# export ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# bun
-# bun completions
+# bun — lazy-loaded
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 bun() {
-  [ -s "/Users/personal/.bun/_bun" ] && source "/Users/personal/.bun/_bun"
-  bun "$@"
+    [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+    unset -f bun
+    bun "$@"
 }
 
 #------------Langs------------
 
 # Golang
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-export PATH=$PATH:$(go env GOPATH)/bin
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
 
-# Deno
-. "/Users/personal/.deno/env"
+# Deno (optional — only source if installed)
+[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"
 
-# Python 3.11
-# The original version is saved in .zprofile.pysave
-export PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:${PATH}"
+# Python managed via Homebrew — no hardcoded version path
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-

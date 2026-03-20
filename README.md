@@ -1,108 +1,56 @@
-# My dotfiles
-This directory contains the dotfiles for my mac system which probably won't work on yours.
+# dotfiles — MacBook Pro 14" M5 Pro
 
-# Install with Script
+Dotfiles for macOS adapted for **MacBook Pro 14" M5 Pro** (Apple Silicon ARM64).
 
-Run the following
-- optional: Install Xcode command line tools beforehand `xcode-select --install`
-    - Install brew  
-        - `sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+## Stack
 
-    - `brew install git`
-    - `git clone https://github.com/Sin-cy/dotfiles.git $HOME/dotfiles` this repo into $HOME
-    - `cd dotfiles` and make install.sh executable `chmod +x ~/dotfiles/install.sh`
-    which ever way possible
-    - run in shell `/bin/bash ~/dotfiles/install.sh` 
+| Component | Tool |
+|---|---|
+| Window manager | AeroSpace |
+| Terminal | Ghostty (primary) · WezTerm · Alacritty |
+| Shell | Zsh + oh-my-zsh + Starship |
+| Editor | Neovim (lazy.nvim) |
+| Multiplexer | tmux + TPM |
+| Status bar | Sketchybar |
+| Key remapping | Karabiner-Elements |
+| Shell history | Atuin |
+| Music player | MPD + rmpc |
+| File manager | Yazi (tmux popup) |
+| Session manager | sesh |
 
-# Manual Install
-## Repository and Installations needed
+## Install
 
-### Install Command Line Tools 
-- `xcode-select --install`
-
-### Install Homebrew
-
-- Install Homebrew.
-
-- `sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-
-Enter your password and proceed yes to confirm the installation if it prompts you to
-
-#### Homebrew extras required
-- `brew install neovim eza fzf fd stow bat zoxide zsh-autosuggestions
-zsh-syntax-highlighting git starship tmux nvm`
-    - If Mason lsp starts shouting when opening neovim
-    - do nvm install node v23.3.0 or v-xx-xx
-
-#### coreutils
-- `brew install coreutils`
-- add `PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"` to top of the rc
-  file (~/.zshrc or ~/.zshenv)
-
-#### fzf-git
-- `git clone https://github.com/junegunn/fzf-git.sh.git`
-
-### Tmux
-Installation
-- `brew install tmux`
-
-Tmux plugins manager
-- `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
-
-### Git
-
--   Check this by running `git --version` in the shell to see if the command is available
--   it will most likely prompt you to install it with Xcode Command Line tools.
-    - (Skip this step if command line tools already installed)
-
-##### Install Git with Homebrew ( My Default ) 
-- Manually Install git with Homebrew `brew install git`
-- brew installs git on mac at `/opt/homebrew/bin/git`
-
-##### Install Git via Xcode
--   Install Xcode usign `xcode-select --install`
--   xcode installs git at `/usr/bin/git`
-
-
-### GNU Stow
-- Refer the docs : [Read More](https://www.gnu.org/software/stow/)
-```
-brew install stow
-```
-
-## Installation of this repo using stow
-
-First, check out dotfiles repo in your $HOME directory using git
-
-```
-$ git clone https://github.com/Sin-cy/dotfiles.git
-$ cd dotfiles
-```
-#### Before Running any stow commands
-- At least for this config structure
-- **!! make sure home directories is set to have the same structure first !!**
-- for instances ( Watch for Sub-directories ) 
-    - if any subdirectory eg: `~/.config` dont exist in $HOME then `mkdir .config`
-    - other config files that don't exist in $HOME atm, should not have any problems
-      for stow symlinks
-
-
-then use GNU stow to create symlinks
-> [!IMPORTANT]
-> make sure you are in your dotfiles directory
-
-- `cd dotfiles`
-- as long as you have the structure setup in $HOME correctly
-- running `stow .` should be enough
-
-##### However, for assurance
-- run stow commands like below for each directory in dotfiles 
-- re-check if the symlinks are correct for each sub-directories and files
 ```bash
-stow -t ~ starship wezterm tmux
+# Prerequisites
+xcode-select --install
+git clone https://github.com/dalonsogomez/dotfiles.git $HOME/dotfiles
 
-#or run them separately
-
-stow -t ~ nvim
-stow -t ~ zsh
+# Run install script
+cd $HOME/dotfiles
+chmod +x install.sh
+/bin/bash install.sh
 ```
+
+## Post-install
+
+```bash
+brew services start sketchybar          # start status bar
+# Open tmux → <prefix> + I             # install tmux plugins (TPM)
+# Open nvim                             # lazy.nvim auto-installs
+# Inside nvim: :Mason                  # install LSP servers
+```
+
+## Adaptations from original (Sin-cy/dotfiles)
+
+| File | Change |
+|---|---|
+| `zsh/.zprofile` | Removed `/Users/personal` hardcoded paths → `$HOME`. Guards for Deno, bun, Console Ninja. |
+| `zsh/.zshrc` | Removed `/Users/personal` paths. Guards for `but` (GitButler) and `wtp` so shell doesn't error if not installed. |
+| `sketchybar/plugins/wifi.sh` | Replaced `airport` CLI (removed in macOS Sequoia) with `networksetup -getairportnetwork en0`. |
+| `install.sh` | Removed deprecated `homebrew/cask-fonts` tap. Added all missing deps (`ghostty`, `sketchybar`, `atuin`, `sesh`, `gum`, `yazi`, `switchaudio-osx`, `imagemagick`, `mpd`, etc). TPM cloned to correct path. Full stow of all packages. |
+| `nvim/lua/sethy/lazy.lua` | `vim.loop.fs_stat` → `vim.uv.fs_stat` (deprecation fix, Neovim ≥ 0.10). |
+| `nvim/lua/sethy/plugins/snacks.lua` | Removed hardcoded `~/Desktop/Others/profile.png` from dashboard. Dashboard image section commented with instructions. |
+
+## Hardware
+
+MacBook Pro 14" M5 Pro (2026) · Space Black · 64 GB unified memory · 1 TB SSD · macOS Sequoia+
