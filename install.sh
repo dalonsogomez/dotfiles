@@ -26,10 +26,15 @@ else
 fi
 
 # ─── Homebrew ────────────────────────────────────────────────────────────────
-echo "Installing Homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-brew analytics off
+if command -v brew &>/dev/null; then
+    echo "Homebrew already installed — skipping."
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    brew analytics off
+fi
 
 # ─── Taps ────────────────────────────────────────────────────────────────────
 echo "Tapping Brew..."
@@ -148,6 +153,20 @@ ZPROFILE="$HOME/.zprofile"
 COREUTILS_LINE='export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"'
 grep -qF "$COREUTILS_LINE" "$ZPROFILE" 2>/dev/null || \
     echo "$COREUTILS_LINE" >> "$ZPROFILE"
+
+# ─── Pre-stow: remove real files that would conflict with symlinks ───────────
+# stow cannot replace real files with symlinks unless they are removed first.
+# We back them up before removing.
+presow_remove() {
+    local target="$HOME/$1"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        echo "  Backing up $target → ${target}.bak"
+        mv "$target" "${target}.bak"
+    fi
+}
+presow_remove ".zshrc"
+presow_remove ".zprofile"
+presow_remove ".zshenv"
 
 # ─── Stow all dotfiles packages ──────────────────────────────────────────────
 echo "Stowing dotfiles..."
