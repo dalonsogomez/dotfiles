@@ -7,14 +7,14 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Option+N → ñ / Shift+Option+N → Ñ",
+                        "description": "Right Option+N → ñ / Right Shift+Option+N → Ñ",
                         "manipulators": [
                             {
-                                "description": "Option+N → ñ",
+                                "description": "Right Option+N → ñ",
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["option"],
+                                        "mandatory": ["right_option"],
                                         "optional": ["caps_lock"]
                                     }
                                 },
@@ -26,11 +26,11 @@
                                 "type": "basic"
                             },
                             {
-                                "description": "Shift+Option+N → Ñ",
+                                "description": "Right Shift+Option+N → Ñ",
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["option", "shift"],
+                                        "mandatory": ["right_option", "shift"],
                                         "optional": ["caps_lock"]
                                     }
                                 },
