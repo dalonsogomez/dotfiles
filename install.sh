@@ -92,16 +92,29 @@ if ! command -v wtp &>/dev/null; then
 fi
 
 # ─── Casks ───────────────────────────────────────────────────────────────────
+# Each cask is installed individually so that an already-present app
+# (e.g. Ghostty installed manually) does not abort the whole script.
 echo "Installing Casks..."
-brew install --cask \
-    ghostty \
-    raycast \
-    karabiner-elements \
-    nikitabobko/tap/aerospace \
-    keycastr \
-    betterdisplay \
-    linearmouse \
-    font-jetbrains-mono-nerd-font
+
+install_cask() {
+    local cask="$1"
+    if brew list --cask "$cask" &>/dev/null; then
+        echo "  ✓ $cask already installed — skipping"
+    else
+        brew install --cask "$cask" || \
+            brew install --cask --force "$cask" || \
+            echo "  ⚠ Could not install $cask — install manually if needed"
+    fi
+}
+
+install_cask ghostty
+install_cask raycast
+install_cask karabiner-elements
+install_cask nikitabobko/tap/aerospace
+install_cask keycastr
+install_cask betterdisplay
+install_cask linearmouse
+install_cask font-jetbrains-mono-nerd-font
 # NOTE: font-sf-pro ships with macOS Tahoe — no installation needed.
 
 # ─── TPM — Tmux Plugin Manager ───────────────────────────────────────────────
