@@ -7,7 +7,44 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Hyper Key (\u2303\u2325\u21e7\u2318)",
+                        "description": "Option+N → ñ / Shift+Option+N → Ñ",
+                        "manipulators": [
+                            {
+                                "description": "Option+N → ñ",
+                                "from": {
+                                    "key_code": "n",
+                                    "modifiers": {
+                                        "mandatory": ["option"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"System Events\" to keystroke \"ñ\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Shift+Option+N → Ñ",
+                                "from": {
+                                    "key_code": "n",
+                                    "modifiers": {
+                                        "mandatory": ["option", "shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"System Events\" to keystroke \"Ñ\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper Key (⌃⌥⇧⌘)",
                         "manipulators": [
                             {
                                 "description": "Caps Lock -> Hyper Key",
