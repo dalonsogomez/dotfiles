@@ -164,14 +164,14 @@ stow -t ~ \
     zed \
     zsh
 
+# ─── Autostart services ──────────────────────────────────────────────────────
+echo "Starting services..."
+brew services start sketchybar
+
 echo ""
 echo "✓ Installation complete."
 echo ""
-echo "Post-install steps:"
-echo "  1. brew services start sketchybar"
-echo "  2. Open tmux → prefix + I  (install TPM plugins)"
-echo "  3. Open nvim  → lazy.nvim auto-installs plugins"
-echo "  4. Inside nvim: :Mason  (install LSP servers)"
-echo "  5. Install Raycast extensions referenced in karabiner.json"
-echo "  6. Add music to ~/.config/mpd/music/ and: brew services start mpd"
-echo "  7. To enable dashboard image: edit nvim/snacks.lua and set your image path"
+echo "Run the post-install script to finish the interactive setup:"
+echo ""
+echo "  /bin/bash ~/dotfiles/post-install.sh"
+echo ""
