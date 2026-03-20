@@ -7,17 +7,29 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Right Option+N → ñ / Right Shift+Option+N → Ñ",
+                        "description": "Option+N → ñ / Shift+Option+N → Ñ",
                         "manipulators": [
                             {
-                                "description": "Right Option+N → ñ",
+                                "description": "Option+N → ñ",
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["right_option"],
-                                        "optional": ["caps_lock"]
+                                        "mandatory": [
+                                            "option"
+                                        ],
+                                        "optional": [
+                                            "caps_lock",
+                                            "shift"
+                                        ]
                                     }
                                 },
+                                "conditions": [
+                                    {
+                                        "type": "variable_unless",
+                                        "name": "hyper",
+                                        "value": 1
+                                    }
+                                ],
                                 "to": [
                                     {
                                         "shell_command": "osascript -e 'tell application \"System Events\" to keystroke \"ñ\"'"
@@ -26,14 +38,26 @@
                                 "type": "basic"
                             },
                             {
-                                "description": "Right Shift+Option+N → Ñ",
+                                "description": "Shift+Option+N → Ñ",
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["right_option", "shift"],
-                                        "optional": ["caps_lock"]
+                                        "mandatory": [
+                                            "option",
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
                                     }
                                 },
+                                "conditions": [
+                                    {
+                                        "type": "variable_unless",
+                                        "name": "hyper",
+                                        "value": 1
+                                    }
+                                ],
                                 "to": [
                                     {
                                         "shell_command": "osascript -e 'tell application \"System Events\" to keystroke \"Ñ\"'"
@@ -80,7 +104,7 @@
                                 "type": "basic"
                             },
                             {
-                                "description": "Caps Lock \u2192 Hyper (\u2303\u2325\u21e7\u2318) when held, Escape when tapped",
+                                "description": "Caps Lock → Hyper (⌃⌥⇧⌘) when held, Escape when tapped",
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": {

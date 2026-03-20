@@ -142,7 +142,7 @@ alt-b = 'workspace B' # for browser
 # alt-e = 'workspace E' 
 alt-f = 'workspace F' # for finder
 alt-m = 'workspace M' #
-alt-n = 'workspace N' # for notes
+# alt-n desactivado: Option+N reservado para ñ (Karabiner). Notion/Obsidian auto-asignan a workspace N via on-window-detected.
 # alt-p = 'workspace P'
 alt-t = 'workspace T' # for terminal shell
 # alt-v = 'workspace V'
@@ -161,7 +161,7 @@ alt-shift-b = 'move-node-to-workspace B'
 # alt-shift-e = 'move-node-to-workspace E'
 alt-shift-f = 'move-node-to-workspace F'
 alt-shift-m = 'move-node-to-workspace M'
-alt-shift-n = 'move-node-to-workspace N'
+# alt-shift-n desactivado junto con alt-n
 # alt-shift-p = 'move-node-to-workspace P'
 alt-shift-t = 'move-node-to-workspace T'
 # alt-shift-v = 'move-node-to-workspace V'
