@@ -17,6 +17,7 @@ source $ZSH/oh-my-zsh.sh
 
 #----- Vim editing mode & keymaps ------
 set -o vi
+export KEYTIMEOUT=1
 
 export EDITOR=nvim
 export VISUAL=nvim

@@ -1,6 +1,6 @@
 # By default Reload config with shft + cmd + ,
-config-file = themes/rosepine
-background-opacity = 0.88
+config-file = themes/rosepine-custom
+background-opacity = 0.67
 background-blur-radius = 25
 
 font-family = JetBrainsMonoNL Nerd Font
@@ -14,7 +14,7 @@ unfocused-split-opacity = 0.55
 split-divider-color = #524f67
 
 macos-titlebar-style = hidden
-macos-option-as-alt = true
+macos-option-as-alt = false
 mouse-hide-while-typing = true
 
 confirm-close-surface = false
