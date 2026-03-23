@@ -69,10 +69,15 @@ AeroSpace organiza las ventanas automáticamente en una cuadrícula sin superpos
 | `Alt + Shift + h/j/k/l` | Mover la ventana en esa dirección |
 | `Alt + Tab` | Alternar entre los dos últimos workspaces |
 | `Alt + Shift + Tab` | Mover el workspace al siguiente monitor |
+| `Alt + Shift + Enter` | **Toggle Floating / Tiling** (Maximizar/Centrar instantáneo) |
 | `Alt + /` | Layout tiles (cuadrícula sin superposición) |
-| `Alt + ,` | Layout accordion (ventanas apiladas con solapamiento) |
+| `Alt + ,` | Layout accordion (Foco central: expande ventana actual, encoge laterales) |
 | `Alt + Shift + ;` | Entrar en modo service |
 | `Alt + Shift + r` | Entrar en modo resize |
+
+**Comportamiento del ratón:**
+- `on-focused-monitor-changed`: El ratón se centra al cambiar de monitor.
+- `on-focus-changed`: **Mouse follows focus**. Al cambiar de ventana con el teclado (`Alt + h/j/k/l`), el cursor salta automáticamente al centro de la nueva ventana. Ideal para no "perder" el ratón en pantallas grandes como el BenQ M27UP.
 
 **Modo resize** (`Alt + Shift + r`, luego):
 
@@ -105,7 +110,7 @@ Ghostty usa Metal (GPU nativa ARM64) para el rendering, lo que lo hace significa
 - Fuente: JetBrainsMono NL Nerd Font, 20pt, sin ligaduras (`-liga`, `-calt`, `-dlig`)
 - Opacidad de fondo: 88% con blur radius 25
 - Cursor: bloque, sin parpadeo
-- `macos-option-as-alt = true` — Option actúa como Alt/Meta dentro del terminal (esencial para vim, readline, tmux)
+- `macos-option-as-alt = false` — Se mantiene en `false` para evitar conflictos con los atajos de AeroSpace y permitir el uso de `Option + n` para la `ñ`.
 - `copy-on-select = clipboard` — la selección con ratón copia automáticamente al clipboard del sistema
 - `mouse-hide-while-typing = true` — el cursor del ratón desaparece al escribir
 
@@ -328,7 +333,8 @@ Convierte `CapsLock` en una **Hyper Key** (⌃⌥⇧⌘ simultáneos), la combin
 
 **CapsLock:**
 - **Tap solo** → `Escape`
-- **Mantener** → activa Hyper Key (el resto de atajos funcionan)
+- **Mantener** → activa Hyper Key (⌃⌥⇧⌘)
+- **Bloqueo de Mayúsculas:** Como CapsLock es ahora Hyper, para activar el bloqueo de mayúsculas real pulsa **ambos Shift simultáneamente**.
 
 **Primera capa — Hyper + tecla directa:**
 
@@ -351,7 +357,7 @@ Convierte `CapsLock` en una **Hyper Key** (⌃⌥⇧⌘ simultáneos), la combin
 | `i` | Messages |
 | `f` | Finder |
 | `p` | Music |
-| `v` | Visual Studio Code |
+| `v` | **Visual Studio Code - Insiders** |
 | `c` | Zen Browser |
 
 **Capa `w` — Window (gestión de ventanas vía Raycast):**
