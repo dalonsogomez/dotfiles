@@ -190,7 +190,6 @@ b = 'balance-sizes'
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
-alt-shift-b = 'balance-sizes'
 
 enter = 'mode main'
 esc = 'mode main'
@@ -200,6 +199,7 @@ esc = 'mode main'
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
+b = ['layout tiles', 'flatten-workspace-tree', 'balance-sizes', 'mode main'] # fit current workspace
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
@@ -244,3 +244,11 @@ run = "move-node-to-workspace O"
 [[on-window-detected]]
 if.app-id = 'md.obsidian'
 run = "move-node-to-workspace O"
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = "move-node-to-workspace M"
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+run = "move-node-to-workspace M"

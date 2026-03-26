@@ -9,14 +9,11 @@ toggle_mute() {
     osascript -e 'set volume output muted true'
   fi
 
-  sketchybar --set volume_icon popup.drawing=off \
-             --set mic popup.drawing=off
+  sketchybar --set volume_icon popup.drawing=off
 }
 
 toggle_dropdown() {
   source "$CONFIG_DIR/colors.sh"
-
-  sketchybar --set mic popup.drawing=off
 
   args=(--remove '/volume.device\.*/' --set volume_icon popup.drawing=toggle)
 

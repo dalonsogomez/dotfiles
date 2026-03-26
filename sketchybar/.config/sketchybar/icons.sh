@@ -16,3 +16,10 @@ VOLUME_66=
 VOLUME_33=
 VOLUME_10=
 VOLUME_0=
+
+# Workspace Icons
+WS_BROWSER=
+WS_TERMINAL=
+WS_NOTES=
+WS_FINDER=
+WS_MUSIC=

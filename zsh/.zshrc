@@ -9,8 +9,8 @@ fpath=(~/.zsh/completions $fpath)
 
 plugins=(
     git
-    zsh-syntax-highlighting
     zsh-system-clipboard
+    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -38,7 +38,7 @@ export FZF_TMUX_OPTS=" -p90%,70% "
 bindkey -r "^G"
 
 # Initializers and sources
-eval "$(gdircolors)"
+command -v gdircolors &>/dev/null && eval "$(gdircolors)"
 
 # wtp — guarded: only init if installed
 command -v wtp &>/dev/null && eval "$(wtp shell-init zsh)"
@@ -51,15 +51,15 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
       "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
     zle -N zle-keymap-select "";
 fi
-eval "$(starship init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)"
 
-eval "$(zoxide init zsh)"
-eval "$(fzf --zsh)"
-source ~/scripts/fzf-git.sh
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+command -v fzf &>/dev/null && eval "$(fzf --zsh)"
+[ -f ~/scripts/fzf-git.sh ] && source ~/scripts/fzf-git.sh
 
 # Atuin
 export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
+command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 bindkey '^r' atuin-search-viins
 
 # Sesh tmux session picker
@@ -123,5 +123,3 @@ alias myvault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/"
 typeset -U PATH
 export PATH="$HOME/.local/bin:$PATH"
 
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

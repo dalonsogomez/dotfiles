@@ -1,7 +1,7 @@
 # https://github.com/FelixKratz/dotfiles
 
 source "$CONFIG_DIR/colors.sh"
-source "$CONFIG_DIR/icons.sh" # Loads all defined icons
+source "$CONFIG_DIR/icons.sh"
 
 ITEM_DIR="$CONFIG_DIR/items"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
@@ -9,61 +9,68 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 FONT="JetBrainsMono Nerd Font"
 
 ##### Bar Appearance #####
-# Configuring the general appearance of the bar.
-# These are only some of the options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+sketchybar --bar position=top \
+                display=all \
+                height=30 \
+                notch_display_height=34 \
+                notch_width=220 \
+                margin=8 \
+                y_offset=6 \
+                blur_radius=12 \
+                color="$BAR_COLOR" \
+                corner_radius=12 \
+                border_color="$BAR_BORDER_COLOR" \
+                border_width=1 \
+                padding_left=12 \
+                padding_right=12 \
+                sticky=on \
+                topmost=window \
+                font_smoothing=on \
+                shadow=off
 
-sketchybar --bar position=top height=40 blur_radius=0 color="$TRANSPARENT"
-
-##### Changing Defaults #####
-# We now change some default values, which are applied to all further items.
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
-
+##### Defaults #####
 default=(
-        padding_left=3
-        padding_right=3
+  padding_left=1
+  padding_right=1
 
-        background.color="$ITEM_BG_COLOR"
-        background.corner_radius=5
-        background.height=25
+  background.color="$ITEM_BG_COLOR"
+  background.corner_radius=4
+  background.height=18
 
-        icon.font="$FONT:Regular:15.0"
-        label.font="$FONT:Regular:14.0"
+  icon.font="$FONT:Regular:13.0"
+  label.font="$FONT:Regular:11.0"
 
-        icon.color=$WHITE
-        icon.y_offset=1
+  icon.color=$WHITE
+  label.color=$WHITE
 
-        label.color=$WHITE
-        label.y_offset=1
+  icon.padding_left=7
+  icon.padding_right=4
 
-        icon.padding_left=10
-        icon.padding_right=4
-
-        label.padding_left=4
-        label.padding_right=10
+  label.padding_left=3
+  label.padding_right=7
 )
 sketchybar --default "${default[@]}"
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event spotify_playback_change com.spotify.client.PlaybackStateChanged
 
 ##### Left Items #####
+source "$ITEM_DIR/menu.sh"
 source "$ITEM_DIR/space.sh"
-# adds layout background for workspaces
-sketchybar --add bracket workspaces space.1 space.2 space.3 space.4 space.8 space.9 space.B space.F space.M space.O space.T \
-           --set workspaces background.color="$PURE_BLACK" \
-
+source "$ITEM_DIR/aerospace_ws.sh"
 source "$ITEM_DIR/front_app.sh"
+source "$ITEM_DIR/display_mode.sh"
+source "$ITEM_DIR/workspace_fit.sh"
+source "$ITEM_DIR/popup_guard.sh"
 
 ##### Right Items #####
+source "$ITEM_DIR/spotify.sh"
+source "$ITEM_DIR/git.sh"
+source "$ITEM_DIR/cpu.sh"
+source "$ITEM_DIR/media_block.sh"
 source "$ITEM_DIR/clock.sh"
 
-source "$ITEM_DIR/media_block.sh"
-          
-           
 sketchybar --hotload on
-##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
+"$PLUGIN_DIR/display_mode.sh" refresh >/dev/null 2>&1 || true
 
-echo "sketchybar configuation loaded.."
+echo "sketchybar configuration loaded"
